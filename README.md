@@ -1,7 +1,7 @@
 # Spectrum Scale TIG Repository
 
 ## Description
-Telegraf Checks and Grafana Dashboards for Monitoring GPFS with TIG
+Telegraf Checks and Grafana Dashboards for Monitoring Spectrum Scale with TIG
 
 ### Author
 J.D. Maloney --> Sr. HPC Storage Engineer @ NCSA
@@ -48,7 +48,7 @@ As noted above the parse_fileset_quota.sh script relies on the output of these t
 ### Leveraging of Telegraf community plugins
 The Telegraf community has developed a large amount of their own plugins for use by everyone.  We leverage some of those for some of these dashboards, the ones we use are the following: cpu, disk, infiniband, mem, processes, system, systemd_units, ipmi_sensor, net.  A couple of the included dashboards pull data that comes from these plugins.  
 
-### Known Bugs
+## Known Bugs
 * The detection of cluster deadlock events is not fully reliable at this time; it has not yet proven to catch them all for us.  This will depend on how the deadlock manifests and other cluster state.  Work to harden this is on our task list to work on
 
 
