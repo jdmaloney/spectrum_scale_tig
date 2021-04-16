@@ -1,4 +1,4 @@
-# Spectrum Scale TIG Repository
+# Spectrum Scale TIG
 
 ## Description
 Telegraf Checks and Grafana Dashboards for Monitoring Spectrum Scale with TIG
@@ -9,6 +9,9 @@ J.D. Maloney --> Sr. HPC Storage Engineer @ NCSA
 ### Contributors
 * J.D. Maloney
 * Sean Stevens --> Sr. HPC Storage Engineer @ NCSA
+
+### Development & Disclaimer
+This repository exists for public access to this information; we run our own internal git that tracks our production repositories with this information in it (mainly the telegraf check scripts).  I will do my best to regularly sync our internal changes with this repository to keep this up to date.  However because this repo isn't guaranteed to be up to date with our latest, I will not be accepting pull requests.  Lastly of note, while these checks are things we run on our systems and they do not cause any issue, that is not 100% guaranteed in your environment as it will be different and may have different tolerences and behaviors.  Use these scripts and checks at your own risk.
 
 ## Deployment Details
 
@@ -53,6 +56,11 @@ The Telegraf community has developed a large amount of their own plugins for use
 
 
 ## Grafana Dashboards
-JSON files that define some of our favorite dashboards are in this directory.  We are tweaking dashboards all the time and these may fall out of date a bit.  Also we tweak some of these queries to optimize dashboard load performance, these tweaks will be specific to your environment.  For example:
-* On a panel that plots overall Spectrum Scale file system usage; we use data from Telegraf's native "disk" input plugin.  This runs on all our NSD servers, however since this is a parallel file system and the FS usage is of course the same across all nodes that mount it, we have this query filter to a single one of our NSD servers to limit the plot time.  The hostname of your NSD server will be different so adjust accordingly.  These same panels also require specifiying the relevant file system mount path, yours will be different of course also.
+JSON files that define some of our favorite dashboards and some png screenshots of them are in the granfana directory.  We are tweaking dashboards all the time and these may fall out of date a bit with what we run internally.  Also we tweak some of these queries to optimize dashboard load performance, these tweaks will be specific to your environment.  For example:
+* On a panel that plots overall Spectrum Scale file system usage; we use data from Telegraf's native "disk" input plugin.  This runs on all our NSD servers, however since this is a parallel file system and the FS usage is of course the same across all nodes that mount it, we have this query filter to a single one of our NSD servers to limit the plot time.  The hostname of your NSD server will be different so adjust accordingly.  
+
+Some other adjustmenst you will need to make to the panel queris include:
+* Some panels ask for the device name or "fs" name, replace the "your_fs0_here" string with your file system's name
+* Some panels also require specifiying the relevant file system mount path, yours will be different of course also.
+* The datasource for these panels was anonymized to one name "Spectrum Scale InfluxDB"; Grafana should prompt you to select the backing datasource when you import the JSON files
 
