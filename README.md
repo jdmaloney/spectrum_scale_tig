@@ -53,7 +53,7 @@ The Telegraf community has developed a large amount of their own plugins for use
 
 ## Known Bugs
 * The detection of cluster deadlock events is not fully reliable at this time; it has not yet proven to catch them all for us.  This will depend on how the deadlock manifests and other cluster state.  Work to harden this is on our task list to work on
-
+* Grabbing the length of the longest waiter is generally very reliable; what we have has been working for us for a bit over a year; however, since we have not seen all possible waiter messages/types in our environment, the regex may not be perfect to catch everything IBM may want to print in the waiter message.  Some edge cases could conceivably crop up and break it if you get waiter messages we haven't seen that defy the current regex. 
 
 ## Grafana Dashboards
 JSON files that define some of our favorite dashboards and some png screenshots of them are in the granfana directory.  We are tweaking dashboards all the time and these may fall out of date a bit with what we run internally.  Also we tweak some of these queries to optimize dashboard load performance, these tweaks will be specific to your environment.  For example:
