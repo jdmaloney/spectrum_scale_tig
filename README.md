@@ -45,5 +45,14 @@ The output of these commands is useful both for data ingestion with Telegraf but
 ### Auto generation of getent passwd/getent group files
 As noted above the parse_fileset_quota.sh script relies on the output of these two commands.  These files are needed to map UIDs and GIDs of users to their pretty names.  We do not run sssd, or similar on our NSD servers as that can cause issues if there is an interuption in LDAP or AD services, and in general it takes longer to run certain commands (like variants of "ls" on directories with a lot of files/sub-directories).  This results in the output of mmrepquota not having the user and group pretty names.  These files provide that mapping so that what goes into the InfluxDB database is easy for humans to understand.  If the server you use to dump mmrepquota data ties into your authentication infrastructure then these files won't be necessary; but you'll want to update the parsing script accordingly.  We update these files regularly via a cron job every hour to ensure we have up to date mappings. 
 
+### Leveraging of Telegraf community plugins
+The Telegraf community has developed a large amount of their own plugins for use by everyone.  We leverage some of those for some of these dashboards, the ones we use are the following: cpu, disk, infiniband, mem, processes, system, systemd_units, ipmi_sensor, net.  A couple of the included dashboards pull data that comes from these plugins.  
+
+### Known Bugs
+* The detection of cluster deadlock events is not fully reliable at this time; it has not yet proven to catch them all for us.  This will depend on how the deadlock manifests and other cluster state.  Work to harden this is on our task list to work on
+
+
 ## Grafana Dashboards
+JSON files that define some of our favorite dashboards are in this directory.  We are tweaking dashboards all the time and these may fall out of date a bit.  Also we tweak some of these queries to optimize dashboard load performance, these tweaks will be specific to your environment.  For example:
+* On a panel that plots overall Spectrum Scale file system usage; we use data from Telegraf's native "disk" input plugin.  This runs on all our NSD servers, however since this is a parallel file system and the FS usage is of course the same across all nodes that mount it, we have this query filter to a single one of our NSD servers to limit the plot time.  The hostname of your NSD server will be different so adjust accordingly.  These same panels also require specifiying the relevant file system mount path, yours will be different of course also.
 
