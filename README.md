@@ -4,11 +4,11 @@
 Telegraf Checks and Grafana Dashboards for Monitoring GPFS with TIG
 
 ### Author
-J.D. Maloney --> Sr. HPC Storage Engineer @ NCSA
+* J.D. Maloney --> Sr. HPC Storage Engineer @ NCSA
 
 ### Contributors
-J.D. Maloney
-Sean Stevens --> Sr. HPC Storage Engineer @ NCSA
+* J.D. Maloney
+* Sean Stevens --> Sr. HPC Storage Engineer @ NCSA
 
 ## Deployment Details
 
