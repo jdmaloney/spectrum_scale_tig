@@ -4,7 +4,7 @@
 Telegraf Checks and Grafana Dashboards for Monitoring GPFS with TIG
 
 ### Author
-* J.D. Maloney --> Sr. HPC Storage Engineer @ NCSA
+J.D. Maloney --> Sr. HPC Storage Engineer @ NCSA
 
 ### Contributors
 * J.D. Maloney
@@ -36,14 +36,14 @@ Telegraf Checks and Grafana Dashboards for Monitoring GPFS with TIG
 
 NOTE: With regard to the base_path variable -- The parse_fileset_quota.sh script expects the output of "mmlsfileset $device -L -Y", "mmrepquota -Y $device", "getent passwd", and "getent group" to be located in the directory path specified by this variable.  This generally should be somewhere on the Spectrum Scale File System (eg. an admin diretory or something).  File names for the output of the aformentioned commands are expected to be: $cluster_$fs_fileset, $cluster_$fs_quota, $cluster_passwd, $cluster_group.  This format can be observed by reading the parse_fileset_quota.sh script.  Details on the reasoning behind this is in supporting implementation details below.
 
-### Telegraf Supporting Implementation Details
+## Telegraf Supporting Implementation Details
 Most of the above is very flexible and dynamic; care was taken when developing to make this as portable as possible.  However HPC can be complicated and there are some parts that are made a bit rigid to conform to our best practices.  This section details these situations.  You can tweak the scripts in this repo (mainly the parse_fileset_quota.sh script) to get around some of this if it unnecessary in your environment.  
 
-#### Auto generation of mmrepquota and mmlsfileset data
+### Auto generation of mmrepquota and mmlsfileset data
 The output of these commands is useful both for data ingestion with Telegraf but also other uses.  In our environments for example we print quota stats into user's terminal sessions upon login so they see that information.  That script needs to source its quota information also.  Instead of having all tools that need quota information running their own invocations of mmrepquota/mmlsfileset, we do this centrally and the tools can all parse through these same files.  We dump the output of the mmrepquota and mmlsfileset commands described above on 15 minute intervals; we have a cron job on all NSD servers that checks if it is the cluster manager, and if so dumps this output for all file systems.  
 
-#### Auto generation of getent passwd/getent group files
+### Auto generation of getent passwd/getent group files
 As noted above the parse_fileset_quota.sh script relies on the output of these two commands.  These files are needed to map UIDs and GIDs of users to their pretty names.  We do not run sssd, or similar on our NSD servers as that can cause issues if there is an interuption in LDAP or AD services, and in general it takes longer to run certain commands (like variants of "ls" on directories with a lot of files/sub-directories).  This results in the output of mmrepquota not having the user and group pretty names.  These files provide that mapping so that what goes into the InfluxDB database is easy for humans to understand.  If the server you use to dump mmrepquota data ties into your authentication infrastructure then these files won't be necessary; but you'll want to update the parsing script accordingly.  We update these files regularly via a cron job every hour to ensure we have up to date mappings. 
 
-### Grafana Dashboards
+## Grafana Dashboards
 
