@@ -58,9 +58,11 @@ The Telegraf community has developed a large amount of their own plugins for use
 ## Grafana Dashboards
 JSON files that define some of our favorite dashboards and some png screenshots of them are in the granfana directory.  We are tweaking dashboards all the time and these may fall out of date a bit with what we run internally.  Also we tweak some of these queries to optimize dashboard load performance, these tweaks will be specific to your environment.  For example:
 * On a panel that plots overall Spectrum Scale file system usage; we use data from Telegraf's native "disk" input plugin.  This runs on all our NSD servers, however since this is a parallel file system and the FS usage is of course the same across all nodes that mount it, we have this query filter to a single one of our NSD servers to limit the plot time.  The hostname of your NSD server will be different so adjust accordingly.  
+* On the NSD servers dashboard; we plot the health of some systemd services; these use a query that does not match output from a community input plugin or from a script I've included.  Currently our dashboards use a legacy systemd service check script that we wrote before the community introduced the systemd_units plugin; our migration to this plugin is still ongoing.  We recommend you convert these panel queries to the appropriate ones for the systemd_units plugin.
 
 Some other adjustmenst you will need to make to the panel queris include:
 * Some panels ask for the device name or "fs" name, replace the "your_fs0_here" string with your file system's name
-* Some panels also require specifiying the relevant file system mount path, yours will be different of course also.
+* Some panels also require specifiying the relevant file system mount path, yours will be different of course also
+* Some of our clusters run services yours may not; eg. ddn-ibsrp may not be something you run.  Feel free to delete that panel; same with muliptath or iptables or any other service panel not relevant
+* Your NSD servers may not give you all the same temp/voltage sensors these panels show, feel free to remove or adjust as needed.  These sensor names often vary from vendor to vendor
 * The datasource for these panels was anonymized to one name "Spectrum Scale InfluxDB"; Grafana should prompt you to select the backing datasource when you import the JSON files
-
