@@ -1,0 +1,11 @@
+##
+## This is a sample file; ss_mmpmon_update.sh will overwrite its contents upon run
+##
+fs0 nsd_name_00
+fs0 nsd_name_01
+fs0 nsd_name_02
+fs0 nsd_name_03
+fs0 nsd_name_04
+fs1 nsd_name_05
+fs1 nsd_name_06
+fs1 nsd_name_07

@@ -1,0 +1,9 @@
+##
+## This is a sample file; ss_mmpmon_update.sh will overwrite its contents upon run
+##
+nlist add node01
+nlist add node02
+nlist add node03
+nlist add node04
+fs_io_s
+reset

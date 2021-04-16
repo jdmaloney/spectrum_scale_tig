@@ -1,0 +1,18 @@
+##Spectrum Scale Telegraf Config
+
+## Variable Descriptions ##
+## cluster --> The pretty name of your cluster; can be what you want doesn't have to be official name of Spectrum Scale Cluster; metrics are tagged with this string so multiple clusters can be tracked
+
+## fs --> Space sperated list of file systems; will be read in as an array so that, where relevant, per-file system metrics are gathered
+
+## paths --> Space separated list of paths to run "ls" on to gather the time it takes from that machine's perspective
+
+## files --> Space separated list of files to run "stat" on to gather the time it takes from that machine's perspective
+
+## check_file --> Path to file (**Beneath the mount point**) to check on every file system to ensure mount presensce is healthy; see usage in ss_health.sh.  At NCSA for example we place a hidden file named .SETcheck in the top level of every file system
+
+readonly cluster=""
+readonly fs=""
+readonly paths=""
+readonly files=""
+readonly check_file=""
