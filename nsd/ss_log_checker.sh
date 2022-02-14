@@ -12,7 +12,7 @@ myid=$(sudo /usr/lpp/mmfs/bin/mmgetstate | awk 'END {print $2}')
 cmgr=$(sudo /usr/lpp/mmfs/bin/mmlsmgr -c | cut -d'(' -f 2 | cut -d')' -f 1)
 
 if [[ "$cmgr" == *"$myid"* ]]; then
-expel_count=$(cat ${tfile} | grep "is being expelled" | wc -l)
+expel_count=$(cat ${tfile} | grep 'is being expelled\|Expelling' | wc -l)
 echo mmfsd_log,match_rule=node_expel count=${expel_count}
 fi
 
