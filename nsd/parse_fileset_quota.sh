@@ -11,10 +11,7 @@ for f in ${fs[@]}
 do
 	cat ${base_path}/${cluster}_${f}_fileset | cut -d':' -f 8,12,33,34 | grep -v filesetName | sed 's/:/\ /g' > /tmp/fileset.out
 	while read l; do
-		name=$(echo $l | awk '{print $1}')
-		maxalloc_inode=$(echo $l | awk '{print $3}')
-		used_inode=$(echo $l | awk '{print $4}')
-		rawpath=$(echo $l | awk '{print $2}')
+		IFS=" " read -r name rawpath maxalloc_inode used_inode <<< "${l}"
 		path=$(sudo /usr/lpp/mmfs/bin/mmclidecode "$rawpath")
 
 		## Send to InfluxDB
