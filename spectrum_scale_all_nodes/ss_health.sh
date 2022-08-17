@@ -1,7 +1,8 @@
 #!/bin/bash
 
-## Check if Node even uses GPFS
-if [ -d /usr/lpp/mmfs/bin ]; then
+## Check if GPFS is up
+if [ $(ps -ef | grep "/usr/lpp/mmfs/bin/mmfsd" | grep -v grep | wc -l) -eq 1 ]; then
+echo "ss_health,healthcheck=mmfsd_up up=1"
 
 source /etc/telegraf/ss_config
 
@@ -29,10 +30,10 @@ if [ -z $mem_usage ]; then
         m_count=0
 fi
 
-echo "waitercount,type=client count=$count_w"
-echo "longestwaiter,type=client length=$longest_w"
-echo "daemoncpu,type=client usage=$cpu_usage"
-echo "daemonmem,type=client usage=$mem_usage"
+echo "ss_health,health_check=waitercount,type=client count=$count_w"
+echo "ss_health,health_check=longestwaiter,type=client length=$longest_w"
+echo "ss_health,health_check=daemoncpu,type=client usage=$cpu_usage"
+echo "ss_heatlh,health_check=daemonmem,type=client usage=$mem_usage"
 
 ## FS Responsive Test ##
 tfile1=$(mktemp /tmp/ls.XXXXXX)
@@ -44,7 +45,7 @@ do
 	min=$(cat ${tfile1} | grep real | awk '{print $2}' | cut -d'm' -f 1)
 	sec=$(cat ${tfile1} | grep real | awk '{print $2}' | cut -d'm' -f 2 | cut -d's' -f 1)
 	time=$( bc -l <<<"60*$min + $sec" )
-	echo fs_ls_time,path=${p} duration=${time}
+	echo "ss_health,health_check=fs_ls_time,path=${p} duration=${time}"
 done
 
 for f in ${files[@]}
@@ -53,7 +54,7 @@ do
 	min=$(cat ${tfile2} | grep real | awk '{print $2}' | cut -d'm' -f 1)
 	sec=$(cat ${tfile2} | grep real | awk '{print $2}' | cut -d'm' -f 2 | cut -d's' -f 1)
 	time=$( bc -l <<<"60*$min + $sec" )
-	echo fs_stat_time,path=${f} duration=${time}
+	echo "ss_health,health_check=fs_stat_time,path=${f} duration=${time}"
 done
 
 rm -rf $tfile1
@@ -91,22 +92,22 @@ do
 	fi
 	if [ $proc_check -eq 0 ] && [ $stat_check -eq 0 ]; then
 		#All is healthy
-		echo "mountcheck,fs=${f} presence=1"
+		echo "ss_health,health_check=mountcheck,fs=${f} presence=1"
 	else
-		echo "mountcheck,fs=${f} presence=0"
+		echo "ss_health,health_check=mountcheck,fs=${f} presence=0"
 	fi
 
 done
 
 ### mmfsd memory info
 read heap pool_1 pool_2 pool_3 <<< "$(sudo /usr/lpp/mmfs/bin/mmdiag --memory | grep bytes | grep -v committed | sed 's/[^0-9]*//g' | xargs)"
-echo mmfsd_memory heap=${heap},pool_1=${pool_1},pool_2=${pool_2},pool_3=${pool_3}
+echo "ss_health,health_check=mmfsd_memory heap=${heap},pool_1=${pool_1},pool_2=${pool_2},pool_3=${pool_3}"
 
 ## mmdiag stats
 read of_inuse of_free of_mem stat_inuse stat_dirs stat_free stat_mem <<< "$(sudo /usr/lpp/mmfs/bin/mmdiag --stats -Y | grep 'openFile\|statCache' | grep 'inUse\|dirs\|free\|memory' | cut -d':' -f 10 | xargs)"
-echo mmdiag_stats file_cache_used=${of_inuse},file_cache_free=${of_free},file_cache_memory=${of_mem},stat_cache_used=${stat_inuse},stat_cache_dirs=${stat_dirs},stat_cache_free=${stat_free},stat_cache_memory=${stat_mem}
+echo "ss_health,health_check=mmdiag_stats file_cache_used=${of_inuse},file_cache_free=${of_free},file_cache_memory=${of_mem},stat_cache_used=${stat_inuse},stat_cache_dirs=${stat_dirs},stat_cache_free=${stat_free},stat_cache_memory=${stat_mem}"
 
 
 else
-        :
+        echo "ss_health,healthcheck=mmfsd_up up=0"
 fi
