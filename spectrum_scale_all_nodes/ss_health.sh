@@ -2,7 +2,7 @@
 
 ## Check if GPFS is up
 if [ $(ps -ef | grep "/usr/lpp/mmfs/bin/mmfsd" | grep -v grep | wc -l) -eq 1 ]; then
-echo "ss_health,healthcheck=mmfsd_up up=1"
+echo "ss_health,health_check=mmfsd_up up=1"
 
 source /etc/telegraf/ss_config
 
@@ -109,5 +109,5 @@ echo "ss_health,health_check=mmdiag_stats file_cache_used=${of_inuse},file_cache
 
 
 else
-        echo "ss_health,healthcheck=mmfsd_up up=0"
+        echo "ss_health,health_check=mmfsd_up up=0"
 fi
