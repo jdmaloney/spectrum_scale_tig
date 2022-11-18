@@ -104,9 +104,8 @@ read heap pool_1 pool_2 pool_3 <<< "$(sudo /usr/lpp/mmfs/bin/mmdiag --memory | g
 echo "ss_health,health_check=mmfsd_memory heap=${heap},pool_1=${pool_1},pool_2=${pool_2},pool_3=${pool_3}"
 
 ## mmdiag stats
-read of_inuse of_free of_mem stat_inuse stat_dirs stat_free stat_mem <<< "$(sudo /usr/lpp/mmfs/bin/mmdiag --stats -Y | grep 'openFile\|statCache' | grep 'inUse\|dirs\|free\|memory' | cut -d':' -f 10 | xargs)"
-echo "ss_health,health_check=mmdiag_stats file_cache_used=${of_inuse},file_cache_free=${of_free},file_cache_memory=${of_mem},stat_cache_used=${stat_inuse},stat_cache_dirs=${stat_dirs},stat_cache_free=${stat_free},stat_cache_memory=${stat_mem}"
-
+counters=$(sudo /usr/lpp/mmfs/bin/mmdiag --stats -Y | grep -v HEADER | cut -d':' -f 8-10 | sed 's/:/_/' | sed 's/:/=/' | xargs | sed 's/\ /,/g')
+echo "ss_health,health_check=mmdiag_stats ${counters}"
 
 else
         echo "ss_health,health_check=mmfsd_up up=0"
