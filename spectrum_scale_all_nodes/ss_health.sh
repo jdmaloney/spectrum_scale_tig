@@ -33,7 +33,7 @@ fi
 echo "ss_health,health_check=waitercount,type=client count=$count_w"
 echo "ss_health,health_check=longestwaiter,type=client length=$longest_w"
 echo "ss_health,health_check=daemoncpu,type=client usage=$cpu_usage"
-echo "ss_heatlh,health_check=daemonmem,type=client usage=$mem_usage"
+echo "ss_health,health_check=daemonmem,type=client usage=$mem_usage"
 
 ## FS Responsive Test ##
 tfile1=$(mktemp /tmp/ls.XXXXXX)
