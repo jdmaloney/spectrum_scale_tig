@@ -16,24 +16,24 @@ do
 		read type <<< "$(echo ${l} | awk -F ":" '{print $2}')"
 		case "$type" in
 		'nsd')
-			read nsdname pool failuregroup meta data size free frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$8" "$10" "$11" "$12" "$9" "$14" "$16}')"
-			echo "mmdf,fs=$f,type=nsd,nsdname=$nsdname,pool=$pool,failuregroup=$failuregroup,meta=$meta,data=$data,size=$size free=$free,frag=$frag"
+			read nsdname pool failuregroup meta data size free_kb free frag_kb frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$8" "$10" "$11" "$12" "$9" "$13" "$14" "$15" "$16}')"
+			echo "mmdf,fs=$f,type=nsd,nsdname=$nsdname,pool=$pool,failuregroup=$failuregroup,meta=$meta,data=$data,size=$size free=$free,free_kb=$free_kb,frag=$frag,frag_kb=$frag_kb"
 		;;
 		'poolTotal')
-			read pool size free frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$8" "$10" "$12}')"
-                	echo "mmdf,fs=$f,type=pool,pool=$pool size=$size,free=$free,frag=$frag"
+			read pool size free_kb free frag_kb frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$8" "$9" "$10" "$11" "$12}')"
+                	echo "mmdf,fs=$f,type=pool,pool=$pool size=$size,free=$free,free_kb=$free_kb,frag=$frag,frag_kb=$frag_kb"
 		;;
 		'data')
-			read size free frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$9" "$11}')"
-                	echo "mmdf,fs=$f,type=fs,param=data size=$size,free=$free,frag=$frag"
+			read size free_kb free frag_kb frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$8" "$9" "$10" "$11}')"
+                	echo "mmdf,fs=$f,type=fs,param=data size=$size,free=$free,free_kb=$free_kb,frag=$frag,frag_kb=$frag_kb"
 		;;
 		'metadata')
-			read size free frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$9" "$11}')"
-                	echo "mmdf,fs=$f,type=fs,param=meta size=$size,free=$free,frag=$frag"
+			read size free_kb free frag_kb frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$8" "$9" "$10" "$11}')"
+                	echo "mmdf,fs=$f,type=fs,param=meta size=$size,free=$free,free_kb=$free_kb,frag=$frag,frag_kb=$frag_kb"
 		;;
 		'fsTotal')
-			read size free frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$9" "$11}')"
-                	echo "mmdf,fs=$f,type=fs,param=total size=$size,free=$free,frag=$frag"
+			read size free_kb free frag_kb frag <<< "$(echo ${l} | awk -F ":" '{print $7" "$8" "$9" "$10" "$11}')"
+                	echo "mmdf,fs=$f,type=fs,param=total size=$size,free=$free,free_kb=$free_kb,frag=$frag,frag_kb=$frag_kb"
 		;;
 		'inode')
 			read used free alloc max <<< "$(echo ${l} | awk -F ":" '{print $7" "$8" "$9" "$10}')"
